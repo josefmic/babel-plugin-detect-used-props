@@ -2,6 +2,7 @@ import { PluginObj, PluginPass } from '@babel/core';
 import fs from 'fs/promises';
 import { getUsedProps } from './traverse';
 import { AnalyzePropsOptions, ProgramOutput } from './types';
+import path from 'path';
 
 let analyzedProps: ProgramOutput = [];
 
@@ -16,11 +17,16 @@ function reactPropHunter(
         analyzedProps = getUsedProps(path, state, analyzedProps);
       }
     },
-    post() {      
+    post() {
       if (options.filePath) {
-        fs.writeFile(options.filePath, JSON.stringify(analyzedProps, null, 2), 'utf-8')
+        const dir = path.dirname(options.filePath);
+    
+        fs.mkdir(dir, { recursive: true })
+          .then(() =>
+            fs.writeFile(options.filePath, JSON.stringify(analyzedProps, null, 2), 'utf-8')
+          )
           .catch(err => console.error('Failed to write analyzed props:', err));
-      }    
+      }
     }
   };
 }
