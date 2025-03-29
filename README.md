@@ -120,5 +120,11 @@ interface AnalyzePropsOptions {
    * @example "./output.json"
    */
   filePath?: string;
+
+  /**
+   * An string or an array of strings of glob patterns to select which files to analyze
+   * @example "src/*.tsx"
+   */
+  patterns?: string | string[];
 }
 ```

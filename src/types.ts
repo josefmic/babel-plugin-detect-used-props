@@ -17,4 +17,5 @@ export type ProgramOutput = AnalyzedFile[];
 
 export type AnalyzePropsOptions = {
     filePath?: string;
+    patterns?: string | string[];
 }

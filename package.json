@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-detect-used-props",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -30,6 +30,7 @@
   "dependencies": {
     "@babel/preset-react": "^7.26.3",
     "@babel/preset-typescript": "^7.26.0",
+    "fast-glob": "^3.3.3",
     "tslib": "^2.8.1"
   },
   "description": "A package that analyzes code and returns a list of use properties from React components",

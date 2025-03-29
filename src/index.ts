@@ -2,7 +2,8 @@ import { PluginObj, PluginPass } from '@babel/core';
 import fs from 'fs/promises';
 import { getUsedProps } from './traverse';
 import { AnalyzePropsOptions, ProgramOutput } from './types';
-import path from 'path';
+import pathModule from 'path';
+import glob from 'fast-glob';
 
 let analyzedProps: ProgramOutput = [];
 
@@ -14,12 +15,25 @@ function detectUsedProps(
     name: 'babel-plugin-detect-used-props',
     visitor: {
       JSXOpeningElement(path, state) {
+        const fileName = state.file.opts.filename;
+
+        const matchedFiles = glob.sync(options.patterns ?? 'src/**/*.{js,jsx,ts,tsx}', {
+          cwd: process.cwd(),
+          absolute: true
+        });
+
+        const normalizedFileName = pathModule.normalize(fileName);
+        const matched = matchedFiles.some(f => pathModule.normalize(f) === normalizedFileName);
+
+        if (!matched) return;
+
         analyzedProps = getUsedProps(path, state, analyzedProps);
-      }
+      } 
+
     },
     post() {
       if (options.filePath) {
-        const dir = path.dirname(options.filePath);
+        const dir = pathModule.dirname(options.filePath);
     
         fs.mkdir(dir, { recursive: true })
           .then(() =>
