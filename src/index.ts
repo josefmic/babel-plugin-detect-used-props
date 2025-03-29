@@ -6,7 +6,7 @@ import path from 'path';
 
 let analyzedProps: ProgramOutput = [];
 
-function reactPropHunter(
+function detectUsedProps(
   { types: t }: { types: any },
   options: AnalyzePropsOptions
 ): PluginObj<PluginPass> {
@@ -31,4 +31,4 @@ function reactPropHunter(
   };
 }
 
-export default reactPropHunter;
+export default detectUsedProps;
