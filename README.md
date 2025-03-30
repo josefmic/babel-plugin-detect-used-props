@@ -102,8 +102,20 @@ export const Component = ({
       {
         name: "Component",
         used: [
-          ["data", "used1"],
-          ["data", "used2"]
+          {
+            "nameParts": [
+              "data", 
+              "used1"
+            ],
+            "sourceType": "function_param"
+          },
+          {
+            "nameParts": [
+              "data", 
+              "used2"
+            ],
+            "sourceType": "function_param"
+          },
         ]
       }
     ]
@@ -127,4 +139,23 @@ interface AnalyzePropsOptions {
    */
   patterns?: string | string[];
 }
+```
+
+## `analyzedProps` output
+
+```ts
+
+type UsedProp = {
+  nameParts: string[];
+  sourceType: "local_variable" | "function_param" | "imported" | "global";
+}
+
+type AnalyzedFile = {
+  fileName: string,
+  functions: {
+    name: string,
+    used: UsedProp[],
+  }[]    
+}
+
 ```

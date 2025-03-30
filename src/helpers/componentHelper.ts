@@ -1,4 +1,4 @@
-import { ProgramOutput } from "../types";
+import { ProgramOutput, UsedProp } from "../types";
 
 /**
  * Helper function to update or add a component in the output.
@@ -7,20 +7,27 @@ import { ProgramOutput } from "../types";
  * @param {string} componentName - The name of the component or prop to add.
  * @param {string[][]} nameParts - The parts of the name to add to `used`.
  */
-export function addOrUpdateComponent(output: ProgramOutput, filePath: string, componentName: string, nameParts: string[][]) {
+export function addOrUpdateComponent(
+    output: ProgramOutput, 
+    filePath: string, 
+    componentName: string, 
+    usedProps: UsedProp[]
+) {
     const existingFile = output.find(x => x.fileName === filePath);
 
     if (existingFile) {
         const existingComponent = existingFile.functions.find(x => x.name === componentName);
                 
         if (existingComponent) {
-            if (!existingComponent.used.some(x => x.join('.') === nameParts[0].join('.'))) {
-                existingComponent.used.push(...nameParts);
-            }
+            usedProps.forEach(({ nameParts, sourceType }) => {
+                if (!existingComponent.used.some(x => x.nameParts.join('.') === nameParts.join('.'))) {
+                    existingComponent.used.push({ nameParts, sourceType });
+                }
+            });
         } else {
             existingFile.functions.push({
                 name: componentName,
-                used: nameParts,
+                used: usedProps,
             });
         }
     } else {
@@ -28,7 +35,7 @@ export function addOrUpdateComponent(output: ProgramOutput, filePath: string, co
             fileName: filePath,
             functions: [{
                 name: componentName,
-                used: nameParts,
+                used: usedProps,
             }]
         });
     }

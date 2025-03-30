@@ -38,11 +38,28 @@ function removeComponentFunction(output, fileName, componentName) {
     }).filter(o => o.functions.length > 0);
 }
 
+function getBindingSourceType(path: NodePath<t.Identifier>): "local_variable" | "function_param" | "imported" | "global" {
+    const binding = path.scope.getBinding(path.node.name);
+
+    if (binding) {
+        if (binding.kind === "param") {
+            return "function_param";
+        } else if (binding.kind === "module") {
+            return "imported";
+        } else if (binding.kind === "var" || binding.kind === "let" || binding.kind === "const") {
+            return "local_variable";
+        }
+    }
+
+    return "global";
+}
+
 
 /**
  * Analyzes the props used in the provided AST.
  * @param {t.JSXOpeningElement} path - The parsed AST.
- * @param {AnalyzedFunctions} output - The final program output.
+ * @param {PluginPass} state - The state.
+ * @param {ProgramOutput} output - The final program output.
  * @returns {ProgramOutput} - An array of tuples where each tuple contains a component name and an array of property names.
  */
 export function getUsedProps(
@@ -59,6 +76,8 @@ export function getUsedProps(
     if (!componentName) return output;
 
     output = removeComponentFunction(output, fileName, componentName);
+
+    const usedProps: { nameParts: string[]; sourceType: "local_variable" | "function_param" | "imported" | "global" }[] = [];
 
     componentPath.traverse({
         MemberExpression(path: NodePath<t.MemberExpression>) {
@@ -84,18 +103,20 @@ export function getUsedProps(
                     nameParts.unshift(currentPath.node.name);
                     const fullName = nameParts.join(".");
                     if (!EXCLUDED_COMPONENTS.has(fullName)) {
-                        addOrUpdateComponent(output, fileName, componentName, [nameParts]);
+                        usedProps.push({ nameParts, sourceType: getBindingSourceType(currentPath) });
                     }
                 }
             }
         },
         Identifier(path: NodePath<t.Identifier>) {
             if (path.parentPath.isJSXExpressionContainer() && componentName) {
-                const propName = path.node.name;
-                addOrUpdateComponent(output, fileName, componentName, [[propName]]);
+                usedProps.push({ nameParts: [path.node.name], sourceType: getBindingSourceType(path) });
             }
-        },
+        }
     });
+
+    addOrUpdateComponent(output, fileName, componentName, usedProps);
 
     return output;
 }
+

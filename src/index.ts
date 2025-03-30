@@ -17,15 +17,17 @@ function detectUsedProps(
       JSXOpeningElement(path, state) {
         const fileName = state.file.opts.filename;
 
-        const matchedFiles = glob.sync(options.patterns ?? 'src/**/*.{js,jsx,ts,tsx}', {
-          cwd: process.cwd(),
-          absolute: true
-        });
-
-        const normalizedFileName = pathModule.normalize(fileName);
-        const matched = matchedFiles.some(f => pathModule.normalize(f) === normalizedFileName);
-
-        if (!matched) return;
+        if (options.patterns) {
+          const matchedFiles = glob.sync(options.patterns, {
+            cwd: process.cwd(),
+            absolute: true
+          });
+  
+          const normalizedFileName = pathModule.normalize(fileName);
+          const matched = matchedFiles.some(f => pathModule.normalize(f) === normalizedFileName);
+  
+          if (!matched) return;
+        }
 
         analyzedProps = getUsedProps(path, state, analyzedProps);
       } 

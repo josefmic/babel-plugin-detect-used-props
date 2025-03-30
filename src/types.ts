@@ -1,16 +1,18 @@
-export type PropPath = string[]
-
 declare global {
     const ANALYZED_PROPS: ProgramOutput;
 }
 
+export type UsedProp = {
+    nameParts: string[];
+    sourceType: "local_variable" | "function_param" | "imported" | "global";
+}
+
 export type AnalyzedFile = {
     fileName: string,
-    functions: Array<{
+    functions: {
         name: string,
-        used: PropPath[],
-        unused?: PropPath[],
-    }>    
+        used: UsedProp[],
+    }[]    
 }
 
 export type ProgramOutput = AnalyzedFile[];
