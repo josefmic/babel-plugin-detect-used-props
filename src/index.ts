@@ -6,6 +6,7 @@ import pathModule from 'path';
 import glob from 'fast-glob';
 
 let analyzedProps: ProgramOutput = [];
+let patterns: string | string[];
 
 function detectUsedProps(
   { types: t }: { types: any },
@@ -18,6 +19,12 @@ function detectUsedProps(
         const fileName = state.file.opts.filename;
 
         if (options.patterns) {
+
+          if (patterns !== options.patterns) {
+            patterns = options.patterns;
+            analyzedProps = [];
+          }
+
           const matchedFiles = glob.sync(options.patterns, {
             cwd: process.cwd(),
             absolute: true

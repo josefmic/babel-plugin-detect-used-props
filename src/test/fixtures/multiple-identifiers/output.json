@@ -1,0 +1,24 @@
+[
+  {
+    "fileName": "C:\\Users\\micha\\Desktop\\bakalarka\\babel-plugin-detect-used-props\\src\\test\\fixtures\\multiple-identifiers\\code.tsx",
+    "functions": [
+      {
+        "name": "App",
+        "used": [
+          {
+            "nameParts": [
+              "test"
+            ],
+            "sourceType": "function_param"
+          },
+          {
+            "nameParts": [
+              "test2"
+            ],
+            "sourceType": "function_param"
+          }
+        ]
+      }
+    ]
+  }
+]

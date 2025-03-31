@@ -1,6 +1,6 @@
 [
   {
-    "fileName": "C:\\Users\\micha\\Desktop\\bakalarka\\babel-plugin-detect-used-props\\src\\__tests__\\fixtures\\single-identifier\\code.tsx",
+    "fileName": "C:\\Users\\micha\\Desktop\\bakalarka\\babel-plugin-detect-used-props\\src\\test\\fixtures\\single-identifier\\code.tsx",
     "functions": [
       {
         "name": "App",
@@ -9,7 +9,7 @@
             "nameParts": [
               "test"
             ],
-            "sourceType": "local_variable"
+            "sourceType": "function_param"
           }
         ]
       }
