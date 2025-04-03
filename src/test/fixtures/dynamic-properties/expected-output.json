@@ -1,0 +1,19 @@
+[
+  {
+    "fileName": "test\\fixtures\\dynamic-properties\\code.tsx",
+    "functions": [
+      {
+        "name": "DynamicPropsComponent",
+        "used": [
+          {
+            "nameParts": [
+              "test",
+              "property1"
+            ],
+            "sourceType": "function_param"
+          }
+        ]
+      }
+    ]
+  }
+]

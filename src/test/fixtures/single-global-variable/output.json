@@ -1,0 +1,20 @@
+[
+  {
+    "fileName": "test\\fixtures\\single-global-variable\\code.tsx",
+    "functions": [
+      {
+        "name": "App",
+        "used": [
+          {
+            "nameParts": [
+              "window",
+              "location",
+              "search"
+            ],
+            "sourceType": "global"
+          }
+        ]
+      }
+    ]
+  }
+]

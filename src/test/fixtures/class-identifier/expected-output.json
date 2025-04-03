@@ -1,0 +1,18 @@
+[
+  {
+    "fileName": "test\\fixtures\\class-identifier\\code.tsx",
+    "functions": [
+      {
+        "name": "App",
+        "used": [
+          {
+            "nameParts": [
+              "test"
+            ],
+            "sourceType": "function_param"
+          }
+        ]
+      }
+    ]
+  }
+]

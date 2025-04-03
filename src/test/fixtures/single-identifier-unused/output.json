@@ -1,6 +1,6 @@
 [
   {
-    "fileName": "C:\\Users\\micha\\Desktop\\bakalarka\\babel-plugin-detect-used-props\\src\\test\\fixtures\\single-identifier-unused\\code.tsx",
+    "fileName": "test\\fixtures\\single-identifier-unused\\code.tsx",
     "functions": [
       {
         "name": "App",

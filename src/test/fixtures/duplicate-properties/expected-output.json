@@ -1,0 +1,20 @@
+[
+  {
+    "fileName": "test\\fixtures\\duplicate-properties\\code.tsx",
+    "functions": [
+      {
+        "name": "App",
+        "used": [
+          {
+            "nameParts": [
+              "test",
+              "property1",
+              "property2"
+            ],
+            "sourceType": "function_param"
+          }
+        ]
+      }
+    ]
+  }
+]

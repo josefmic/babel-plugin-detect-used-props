@@ -1,0 +1,36 @@
+[
+  {
+    "fileName": "test\\fixtures\\memo-identifier\\code.tsx",
+    "functions": [
+      {
+        "name": "MemoizedComponent",
+        "used": [
+          {
+            "nameParts": [
+              "value"
+            ],
+            "sourceType": "local_variable"
+          },
+          {
+            "nameParts": [
+              "useMemo"
+            ],
+            "sourceType": "function_call"
+          },
+          {
+            "nameParts": [
+              "value"
+            ],
+            "sourceType": "function_param"
+          },
+          {
+            "nameParts": [
+              "computedValue"
+            ],
+            "sourceType": "local_variable"
+          }
+        ]
+      }
+    ]
+  }
+]

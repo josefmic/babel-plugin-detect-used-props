@@ -4,8 +4,10 @@ declare global {
 
 export type UsedProp = {
     nameParts: string[];
-    sourceType: "local_variable" | "function_param" | "imported" | "global";
+    sourceType: SourceTypes;
 }
+
+export type SourceTypes = "local_variable" | "function_param" | "imported" | "global" | "function_call"
 
 export type AnalyzedFile = {
     fileName: string,

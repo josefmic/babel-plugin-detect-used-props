@@ -1,0 +1,11 @@
+[
+  {
+    "fileName": "test\\fixtures\\rest-properties\\code.tsx",
+    "functions": [
+      {
+        "name": "App",
+        "used": []
+      }
+    ]
+  }
+]

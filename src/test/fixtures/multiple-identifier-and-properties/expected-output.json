@@ -1,0 +1,35 @@
+[
+  {
+    "fileName": "test\\fixtures\\multiple-identifier-and-properties\\code.tsx",
+    "functions": [
+      {
+        "name": "App",
+        "used": [
+          {
+            "nameParts": [
+              "test",
+              "property1",
+              "property2"
+            ],
+            "sourceType": "function_param"
+          },
+          {
+            "nameParts": [
+              "test2",
+              "property1",
+              "property2",
+              "property3"
+            ],
+            "sourceType": "function_param"
+          },
+          {
+            "nameParts": [
+              "test3"
+            ],
+            "sourceType": "function_param"
+          }
+        ]
+      }
+    ]
+  }
+]

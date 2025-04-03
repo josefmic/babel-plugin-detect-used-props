@@ -1,0 +1,134 @@
+[
+  {
+    "fileName": "test\\fixtures\\complex-example-1\\code.tsx",
+    "functions": [
+      {
+        "name": "UserInfo",
+        "used": [
+          {
+            "nameParts": [
+              "name"
+            ],
+            "sourceType": "function_param"
+          },
+          {
+            "nameParts": [
+              "age"
+            ],
+            "sourceType": "function_param"
+          }
+        ]
+      },
+      {
+        "name": "UserDetails",
+        "used": [
+          {
+            "nameParts": [
+              "useState"
+            ],
+            "sourceType": "function_call"
+          },
+          {
+            "nameParts": [
+              "useCallback"
+            ],
+            "sourceType": "function_call"
+          },
+          {
+            "nameParts": [
+              "setIsVisible"
+            ],
+            "sourceType": "local_variable"
+          },
+          {
+            "nameParts": [
+              "prev"
+            ],
+            "sourceType": "function_param"
+          },
+          {
+            "nameParts": [
+              "setIsVisible"
+            ],
+            "sourceType": "function_call"
+          },
+          {
+            "nameParts": [
+              "user",
+              "name"
+            ],
+            "sourceType": "function_param"
+          },
+          {
+            "nameParts": [
+              "user",
+              "age"
+            ],
+            "sourceType": "function_param"
+          },
+          {
+            "nameParts": [
+              "toggleVisibility"
+            ],
+            "sourceType": "local_variable"
+          }
+        ]
+      },
+      {
+        "name": "Address",
+        "used": [
+          {
+            "nameParts": [
+              "street"
+            ],
+            "sourceType": "function_param"
+          },
+          {
+            "nameParts": [
+              "city"
+            ],
+            "sourceType": "function_param"
+          },
+          {
+            "nameParts": [
+              "zip"
+            ],
+            "sourceType": "function_param"
+          }
+        ]
+      },
+      {
+        "name": "ComplexComponent",
+        "used": [
+          {
+            "nameParts": [
+              "user"
+            ],
+            "sourceType": "local_variable"
+          },
+          {
+            "nameParts": [
+              "address",
+              "street"
+            ],
+            "sourceType": "local_variable"
+          },
+          {
+            "nameParts": [
+              "address",
+              "city"
+            ],
+            "sourceType": "local_variable"
+          },
+          {
+            "nameParts": [
+              "address",
+              "zip"
+            ],
+            "sourceType": "local_variable"
+          }
+        ]
+      }
+    ]
+  }
+]

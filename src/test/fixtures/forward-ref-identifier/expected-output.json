@@ -1,0 +1,18 @@
+[
+  {
+    "fileName": "test\\fixtures\\forward-ref-identifier\\code.tsx",
+    "functions": [
+      {
+        "name": "ForwardedRefComponent",
+        "used": [
+          {
+            "nameParts": [
+              "label"
+            ],
+            "sourceType": "function_param"
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,36 @@
+[
+  {
+    "fileName": "test\\fixtures\\nested-function-identifier\\code.tsx",
+    "functions": [
+      {
+        "name": "NestedFunctionsComponent",
+        "used": [
+          {
+            "nameParts": [
+              "name"
+            ],
+            "sourceType": "function_param"
+          },
+          {
+            "nameParts": [
+              "nestedFunction"
+            ],
+            "sourceType": "local_variable"
+          },
+          {
+            "nameParts": [
+              "nestedFunction"
+            ],
+            "sourceType": "function_call"
+          },
+          {
+            "nameParts": [
+              "deepFunction"
+            ],
+            "sourceType": "function_call"
+          }
+        ]
+      }
+    ]
+  }
+]

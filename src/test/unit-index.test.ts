@@ -32,7 +32,7 @@ pluginTester({
                 const checkFileExistence = async () => {
 
                     while (!fs.existsSync(outputPath)) {
-                        await new Promise(resolve => setTimeout(resolve, 100));
+                        await new Promise(resolve => setTimeout(resolve, 5));
                     }
 
                     const expectedPath = path.join(fixturePath, 'expected-output.json');

@@ -1,0 +1,28 @@
+[
+  {
+    "fileName": "test\\fixtures\\context-identifier\\code.tsx",
+    "functions": [
+      {
+        "name": "ContextComponent",
+        "used": [
+          {
+            "nameParts": [
+              "useContext"
+            ],
+            "sourceType": "function_call"
+          },
+          {
+            "nameParts": [
+              "message"
+            ],
+            "sourceType": "local_variable"
+          }
+        ]
+      },
+      {
+        "name": "App",
+        "used": []
+      }
+    ]
+  }
+]

@@ -1,59 +1,11 @@
 import { NodePath } from "@babel/traverse";
 import * as t from "@babel/types";
 import { addOrUpdateComponent } from "./helpers/componentHelper";
-import { ProgramOutput } from "./types";
+import { ProgramOutput, SourceTypes } from "./types";
 import { EXCLUDED_COMPONENTS } from "./helpers/excludedComponents";
 import { PluginPass } from "@babel/core";
 import defaultPath from "path";
-
-function findParentComponent(path: NodePath<t.JSXOpeningElement>) {
-    return path.findParent((p) =>
-        p.isFunctionDeclaration() ||
-        p.isFunctionExpression() ||
-        p.isArrowFunctionExpression() ||
-        p.isClassDeclaration()
-    );
-}
-
-function getComponentName(componentPath: NodePath): string | null {
-    if (componentPath.isFunctionDeclaration() || componentPath.isClassDeclaration()) {
-        return componentPath.node.id?.name || null;
-    } else if (componentPath.isFunctionExpression() || componentPath.isArrowFunctionExpression()) {
-        const parent = componentPath.findParent((p) => p.isVariableDeclarator());
-        if (parent?.isVariableDeclarator() && t.isIdentifier(parent.node.id)) {
-            return parent.node.id.name;
-        }
-    }
-    return null;
-}
-
-function removeComponentFunction(output, fileName, componentName) {
-    return output.map(o => {
-        if (defaultPath.normalize(o.fileName) !== fileName) return o;
-
-        return {
-            ...o,
-            functions: o.functions.filter(f => f.name !== componentName),
-        };
-    }).filter(o => o.functions.length > 0);
-}
-
-function getBindingSourceType(path: NodePath<t.Identifier>): "local_variable" | "function_param" | "imported" | "global" {
-    const binding = path.scope.getBinding(path.node.name);
-
-    if (binding) {
-        if (binding.kind === "param") {
-            return "function_param";
-        } else if (binding.kind === "module") {
-            return "imported";
-        } else if (binding.kind === "var" || binding.kind === "let" || binding.kind === "const") {
-            return "local_variable";
-        }
-    }
-
-    return "global";
-}
-
+import { collectPropertyChain, findParentComponent, getBindingSourceType, getComponentName, removeComponentFunction } from "./helpers/traverseHelpers";
 
 /**
  * Analyzes the props used in the provided AST.
@@ -67,7 +19,8 @@ export function getUsedProps(
     state: PluginPass,
     output: ProgramOutput
 ): ProgramOutput {
-    const fileName = state.file.opts.filename;
+    const projectRoot = defaultPath.resolve(process.cwd(), "src"); 
+    const fileName = defaultPath.relative(projectRoot, state.file.opts.filename);
 
     const componentPath = findParentComponent(path);
     if (!componentPath) return output;
@@ -77,46 +30,119 @@ export function getUsedProps(
 
     output = removeComponentFunction(output, fileName, componentName);
 
-    const usedProps: { nameParts: string[]; sourceType: "local_variable" | "function_param" | "imported" | "global" }[] = [];
+    const usedProps: { nameParts: string[]; sourceType: SourceTypes }[] = [];
+
+    const collectUsedVariables = (path: NodePath<t.Node>, sourceType: SourceTypes ) => {
+        if (path.isIdentifier()) {
+            usedProps.push({ nameParts: [path.node.name], sourceType });
+        }
+    };
 
     componentPath.traverse({
         MemberExpression(path: NodePath<t.MemberExpression>) {
             if (path.node.property && !path.parentPath.isMemberExpression() && componentName) {
                 if (path.parent.type === "CallExpression" && path.node === path.parent.callee) return;
 
-                let currentPath: NodePath = path;
-                const nameParts: string[] = [];
-
-                while (currentPath.isMemberExpression()) {
-                    const property = currentPath.node.property;
-                    if (t.isIdentifier(property)) {
-                        nameParts.unshift(property.name);
-                    } else if (t.isStringLiteral(property)) {
-                        nameParts.unshift(property.value);
-                    } else if (t.isPrivateName(property)) {
-                        nameParts.unshift("PrivateName");
-                    }
-                    currentPath = currentPath.get("object") as NodePath;
-                }
+                const { nameParts, currentPath } = collectPropertyChain(path);
 
                 if (currentPath.isIdentifier()) {
                     nameParts.unshift(currentPath.node.name);
                     const fullName = nameParts.join(".");
+
                     if (!EXCLUDED_COMPONENTS.has(fullName)) {
-                        usedProps.push({ nameParts, sourceType: getBindingSourceType(currentPath) });
+                        usedProps.push({ nameParts, sourceType: getBindingSourceType(currentPath as NodePath<t.Identifier>) });
                     }
                 }
             }
         },
+
         Identifier(path: NodePath<t.Identifier>) {
             if (path.parentPath.isJSXExpressionContainer() && componentName) {
                 usedProps.push({ nameParts: [path.node.name], sourceType: getBindingSourceType(path) });
             }
-        }
+
+            if (
+                path.node.name === "props" &&
+                path.parentPath.isMemberExpression() &&
+                path.parentPath.get("object").isThisExpression()
+            ) {
+                let currentPath = path.parentPath;
+                while (currentPath.parentPath.isMemberExpression()) {
+                    currentPath = currentPath.parentPath;
+                }
+
+                if (!currentPath.parentPath.isMemberExpression()) {
+                    const { nameParts } = collectPropertyChain(currentPath);
+
+                    if (nameParts[0] === "props") {
+                        nameParts.shift();
+                    }
+
+                    usedProps.push({ nameParts, sourceType: "function_param" });
+                }
+            }
+        },
+
+        CallExpression(path: NodePath<t.CallExpression>) {
+            const callee = path.node.callee;
+
+            if (
+                callee.type === "Identifier" &&
+                (callee.name === "useMemo" || callee.name === "useState")
+            ) {
+                const hookArgs = path.node.arguments;
+                if (hookArgs.length > 0) {
+                    const dependencies = hookArgs[1];
+                    if (dependencies && t.isArrayExpression(dependencies)) {
+                        dependencies.elements.forEach((dep) => {
+                            if (t.isIdentifier(dep)) {
+                                usedProps.push({ nameParts: [dep.name], sourceType: "local_variable" });
+                            }
+                        });
+                    }
+                }
+            }
+
+            if (callee.type === "Identifier") {
+                usedProps.push({ nameParts: [callee.name], sourceType: "function_call" });
+            }
+        },
+
+        FunctionDeclaration(path: NodePath<t.FunctionDeclaration>) {
+            if (path.node.id) {
+                usedProps.push({ nameParts: [path.node.id.name], sourceType: "local_variable" });
+            }
+            path.traverse({
+                Identifier(innerPath: NodePath<t.Identifier>) {
+                    collectUsedVariables(innerPath, getBindingSourceType(innerPath));
+                },
+            });
+        },
+
+        FunctionExpression(path: NodePath<t.FunctionExpression>) {
+            if (path.node.id) {
+                usedProps.push({ nameParts: [path.node.id.name], sourceType: "local_variable" });
+            }
+            path.traverse({
+                Identifier(innerPath: NodePath<t.Identifier>) {
+                    collectUsedVariables(innerPath, getBindingSourceType(innerPath));
+                },
+            });
+        },
+
+        ArrowFunctionExpression(path: NodePath<t.ArrowFunctionExpression>) {
+            path.traverse({
+                Identifier(innerPath: NodePath<t.Identifier>) {
+                    collectUsedVariables(innerPath, getBindingSourceType(innerPath));
+                },
+            });
+        },
+
     });
 
     addOrUpdateComponent(output, fileName, componentName, usedProps);
 
     return output;
 }
+
 

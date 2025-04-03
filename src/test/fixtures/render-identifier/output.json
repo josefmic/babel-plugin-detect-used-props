@@ -1,0 +1,29 @@
+[
+  {
+    "fileName": "test\\fixtures\\render-identifier\\code.tsx",
+    "functions": [
+      {
+        "name": "RenderPropsComponent",
+        "used": [
+          {
+            "nameParts": [
+              "render"
+            ],
+            "sourceType": "function_call"
+          }
+        ]
+      },
+      {
+        "name": "App",
+        "used": [
+          {
+            "nameParts": [
+              "message"
+            ],
+            "sourceType": "function_param"
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,24 @@
+[
+  {
+    "fileName": "test\\fixtures\\multiple-local-variables\\code.tsx",
+    "functions": [
+      {
+        "name": "App",
+        "used": [
+          {
+            "nameParts": [
+              "test"
+            ],
+            "sourceType": "local_variable"
+          },
+          {
+            "nameParts": [
+              "test2"
+            ],
+            "sourceType": "local_variable"
+          }
+        ]
+      }
+    ]
+  }
+]

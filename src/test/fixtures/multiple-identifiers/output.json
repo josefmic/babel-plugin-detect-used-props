@@ -1,6 +1,6 @@
 [
   {
-    "fileName": "C:\\Users\\micha\\Desktop\\bakalarka\\babel-plugin-detect-used-props\\src\\test\\fixtures\\multiple-identifiers\\code.tsx",
+    "fileName": "test\\fixtures\\multiple-identifiers\\code.tsx",
     "functions": [
       {
         "name": "App",

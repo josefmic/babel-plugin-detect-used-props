@@ -1,0 +1,48 @@
+[
+  {
+    "fileName": "test\\fixtures\\hook-identifier\\code.tsx",
+    "functions": [
+      {
+        "name": "HookPropsComponent",
+        "used": [
+          {
+            "nameParts": [
+              "useState"
+            ],
+            "sourceType": "function_call"
+          },
+          {
+            "nameParts": [
+              "setMessage"
+            ],
+            "sourceType": "local_variable"
+          },
+          {
+            "nameParts": [
+              "test"
+            ],
+            "sourceType": "function_param"
+          },
+          {
+            "nameParts": [
+              "setMessage"
+            ],
+            "sourceType": "function_call"
+          },
+          {
+            "nameParts": [
+              "message"
+            ],
+            "sourceType": "local_variable"
+          },
+          {
+            "nameParts": [
+              "updateMessage"
+            ],
+            "sourceType": "local_variable"
+          }
+        ]
+      }
+    ]
+  }
+]
