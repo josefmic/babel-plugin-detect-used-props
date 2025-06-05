@@ -37,7 +37,7 @@ function detectUsedProps(
         }
 
         analyzedProps = getUsedProps(path, state, analyzedProps);
-      } 
+      }
 
     },
     post() {

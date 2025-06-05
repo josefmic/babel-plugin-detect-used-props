@@ -1,6 +1,9 @@
 {
   "name": "babel-plugin-detect-used-props",
-  "version": "0.4.0",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "version": "0.4.2",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
